@@ -1,0 +1,42 @@
+{% extends "app/base.html" %}
+
+{% block title %}{{ object.first_name }} {{ object.last_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3>Contact Details</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>First Name:</strong></div>
+                    <div class="col-md-8">{{ object.first_name }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Last Name:</strong></div>
+                    <div class="col-md-8">{{ object.last_name }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Email:</strong></div>
+                    <div class="col-md-8">{{ object.email }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Phone Number:</strong></div>
+                    <div class="col-md-8">{{ object.phone_number|default:"Not provided" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Address:</strong></div>
+                    <div class="col-md-8">{{ object.address|default:"Not provided" }}</div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'contact_list' %}" class="btn btn-secondary">Back to List</a>
+                <a href="{% url 'contact_update' object.pk %}" class="btn btn-warning">Edit Contact</a>
+                <a href="{% url 'contact_delete' object.pk %}" class="btn btn-danger">Delete Contact</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "app/base.html" %}
+
+{% block title %}Contact List{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>All Contacts</h2>
+            <a href="{% url 'contact_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Add New Contact
+            </a>
+        </div>
+
+        {% if contacts %}
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contact in contacts %}
+                            <tr>
+                                <td>{{ contact.first_name }} {{ contact.last_name }}</td>
+                                <td>{{ contact.email }}</td>
+                                <td>{{ contact.phone_number|default:"N/A" }}</td>
+                                <td>
+                                    <a href="{% url 'contact_detail' contact.pk %}" class="btn btn-sm btn-info">View</a>
+                                    <a href="{% url 'contact_update' contact.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="{% url 'contact_delete' contact.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <h4>No contacts found</h4>
+                <p>Start by <a href="{% url 'contact_create' %}">adding your first contact</a>.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

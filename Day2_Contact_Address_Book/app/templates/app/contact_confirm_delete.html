@@ -1,0 +1,35 @@
+{% extends "app/base.html" %}
+
+{% block title %}Delete Contact{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">
+                <h3>Confirm Deletion</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <strong>Warning!</strong> This action cannot be undone.
+                </div>
+                <p>Are you sure you want to delete this contact?</p>
+                <div class="card mb-3">
+                    <div class="card-body bg-light">
+                        <h5>{{ object.first_name }} {{ object.last_name }}</h5>
+                        <p class="mb-1"><strong>Email:</strong> {{ object.email }}</p>
+                        <p class="mb-0"><strong>Phone:</strong> {{ object.phone_number|default:"N/A" }}</p>
+                    </div>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger">Yes, Delete Contact</button>
+                        <a href="{% url 'contact_detail' object.pk %}" class="btn btn-secondary">No, Keep Contact</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
