@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Event Management{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'event_list' %}">Home</a> |
+        <a href="{% url 'event_create' %}">Add Event</a>
+    </nav>
+    <hr>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

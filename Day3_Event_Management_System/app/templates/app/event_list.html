@@ -1,0 +1,18 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Event List{% endblock %}
+
+{% block content %}
+<h1>Events</h1>
+<ul>
+    {% for event in events %}
+    <li>
+        <strong>{{ event.name }}</strong> - {{ event.date }} at {{ event.location }}
+        <a href="{% url 'event_update' event.pk %}">Edit</a>
+        <a href="{% url 'event_delete' event.pk %}">Delete</a>
+    </li>
+    {% empty %}
+    <li>No events available.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
