@@ -1,0 +1,38 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Budgets{% endblock %}
+
+{% block content %}
+<h1>📊 Monthly Budgets</h1>
+<a href="{% url 'budget_create' %}" class="btn btn-success">+ Add Budget</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th>Category</th>
+            <th>Budget Amount</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for budget in budgets %}
+        <tr>
+            <td>{{ budget.month|date:"F Y" }}</td>
+            <td>{{ budget.category.name }}</td>
+            <td style="font-weight: bold; color: #667eea;">₹{{ budget.amount }}</td>
+            <td>{{ budget.description|truncatewords:8 }}</td>
+            <td>
+                <a href="{% url 'budget_update' budget.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'budget_delete' budget.pk %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" style="text-align: center;">No budgets set. Create one to track your spending!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

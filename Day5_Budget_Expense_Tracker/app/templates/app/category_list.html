@@ -1,0 +1,40 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+<h1>📂 Categories</h1>
+<a href="{% url 'category_create' %}" class="btn btn-success">+ Add Category</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.name }}</td>
+            <td>
+                <span class="badge {% if category.category_type == 'income' %}badge-income{% else %}badge-expense{% endif %}">
+                    {{ category.get_category_type_display }}
+                </span>
+            </td>
+            <td>{{ category.description|truncatewords:10 }}</td>
+            <td>
+                <a href="{% url 'category_update' category.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'category_delete' category.pk %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="text-align: center;">No categories found. Add one to get started!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

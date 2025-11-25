@@ -1,0 +1,54 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Transaction Details{% endblock %}
+
+{% block content %}
+<h1>Transaction Details</h1>
+
+<table>
+    <tr>
+        <th>Title:</th>
+        <td>{{ transaction.title }}</td>
+    </tr>
+    <tr>
+        <th>Amount:</th>
+        <td style="font-size: 20px; font-weight: bold;" class="{% if transaction.transaction_type == 'income' %}text-success{% else %}text-danger{% endif %}">
+            ₹{{ transaction.amount }}
+        </td>
+    </tr>
+    <tr>
+        <th>Type:</th>
+        <td>
+            <span class="badge {% if transaction.transaction_type == 'income' %}badge-income{% else %}badge-expense{% endif %}">
+                {{ transaction.get_transaction_type_display }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <th>Category:</th>
+        <td>{{ transaction.category.name }}</td>
+    </tr>
+    <tr>
+        <th>Date:</th>
+        <td>{{ transaction.date|date:"d F, Y" }}</td>
+    </tr>
+    <tr>
+        <th>Description:</th>
+        <td>{{ transaction.description|default:"No description provided" }}</td>
+    </tr>
+    <tr>
+        <th>Created At:</th>
+        <td>{{ transaction.created_at|date:"d M, Y H:i" }}</td>
+    </tr>
+    <tr>
+        <th>Last Updated:</th>
+        <td>{{ transaction.updated_at|date:"d M, Y H:i" }}</td>
+    </tr>
+</table>
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'transaction_update' transaction.pk %}" class="btn btn-warning">Edit</a>
+    <a href="{% url 'transaction_delete' transaction.pk %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'transaction_list' %}" class="btn btn-primary">Back to List</a>
+</div>
+{% endblock %}

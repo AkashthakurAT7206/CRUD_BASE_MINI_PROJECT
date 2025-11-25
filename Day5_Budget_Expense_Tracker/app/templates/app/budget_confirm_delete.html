@@ -1,0 +1,30 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Delete Budget{% endblock %}
+
+{% block content %}
+<h1>Delete Budget</h1>
+
+<p style="font-size: 18px;">Are you sure you want to delete this budget?</p>
+
+<table style="margin: 20px 0;">
+    <tr>
+        <th>Category:</th>
+        <td>{{ object.category.name }}</td>
+    </tr>
+    <tr>
+        <th>Amount:</th>
+        <td style="font-weight: bold;">₹{{ object.amount }}</td>
+    </tr>
+    <tr>
+        <th>Month:</th>
+        <td>{{ object.month|date:"F Y" }}</td>
+    </tr>
+</table>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="{% url 'budget_list' %}" class="btn btn-primary">Cancel</a>
+</form>
+{% endblock %}
