@@ -1,0 +1,38 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+<h1>📁 Categories</h1>
+<a href="{% url 'category_create' %}" class="btn btn-success">+ Add Category</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Products Count</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ category.description|truncatewords:15 }}</td>
+            <td>{{ category.products.count }}</td>
+            <td>{{ category.created_at|date:"d M, Y" }}</td>
+            <td>
+                <a href="{% url 'category_update' category.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'category_delete' category.pk %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" style="text-align: center;">No categories found. Add one to get started!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

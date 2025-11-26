@@ -1,0 +1,62 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Dashboard - Inventory Management{% endblock %}
+
+{% block content %}
+<h1>📊 Dashboard</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Products</h3>
+        <div class="number">{{ total_products }}</div>
+    </div>
+    <div class="stat-card orange">
+        <h3>Low Stock Items</h3>
+        <div class="number">{{ low_stock_products }}</div>
+    </div>
+    <div class="stat-card green">
+        <h3>Total Inventory Value</h3>
+        <div class="number">₹{{ total_inventory_value|floatformat:2 }}</div>
+    </div>
+    <div class="stat-card blue">
+        <h3>Total Categories</h3>
+        <div class="number">{{ total_categories }}</div>
+    </div>
+    <div class="stat-card purple">
+        <h3>Total Suppliers</h3>
+        <div class="number">{{ total_suppliers }}</div>
+    </div>
+</div>
+
+<h2>Recent Stock Movements</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Product</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Reference</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for movement in recent_movements %}
+        <tr>
+            <td>{{ movement.date|date:"d M, Y H:i" }}</td>
+            <td>{{ movement.product.name }}</td>
+            <td>
+                <span class="badge {% if movement.movement_type == 'in' %}badge-success{% elif movement.movement_type == 'out' %}badge-danger{% else %}badge-info{% endif %}">
+                    {{ movement.get_movement_type_display }}
+                </span>
+            </td>
+            <td>{{ movement.quantity }}</td>
+            <td>{{ movement.reference_number|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" style="text-align: center;">No recent movements</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

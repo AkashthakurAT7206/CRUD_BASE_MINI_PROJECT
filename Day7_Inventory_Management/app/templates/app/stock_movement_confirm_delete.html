@@ -1,0 +1,36 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Delete Stock Movement{% endblock %}
+
+{% block content %}
+<h1>Delete Stock Movement</h1>
+
+<p style="font-size: 18px;">Are you sure you want to delete this stock movement record?</p>
+
+<table style="margin: 20px 0;">
+    <tr>
+        <th>Product:</th>
+        <td>{{ object.product.name }}</td>
+    </tr>
+    <tr>
+        <th>Type:</th>
+        <td>{{ object.get_movement_type_display }}</td>
+    </tr>
+    <tr>
+        <th>Quantity:</th>
+        <td>{{ object.quantity }}</td>
+    </tr>
+    <tr>
+        <th>Date:</th>
+        <td>{{ object.date|date:"d F, Y H:i" }}</td>
+    </tr>
+</table>
+
+<p style="color: #dc3545;">⚠️ Warning: Deleting this movement will NOT reverse the stock changes. You need to manually adjust inventory.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="{% url 'stock_movement_list' %}" class="btn btn-primary">Cancel</a>
+</form>
+{% endblock %}

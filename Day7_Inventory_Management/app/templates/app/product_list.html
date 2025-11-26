@@ -1,0 +1,51 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Products - Inventory Management{% endblock %}
+
+{% block content %}
+<h1>📦 Products</h1>
+<a href="{% url 'product_create' %}" class="btn btn-success">+ Add Product</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>SKU</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Supplier</th>
+            <th>Unit Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.sku }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.category.name }}</td>
+            <td>{{ product.supplier.name|default:"-" }}</td>
+            <td>₹{{ product.unit_price }}</td>
+            <td>{{ product.quantity_in_stock }}</td>
+            <td>
+                {% if product.is_low_stock %}
+                <span class="badge badge-danger">Low Stock</span>
+                {% else %}
+                <span class="badge badge-success">In Stock</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'product_detail' product.pk %}" class="btn btn-info">View</a>
+                <a href="{% url 'product_update' product.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" style="text-align: center;">No products found. Add one to get started!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

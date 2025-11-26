@@ -1,0 +1,14 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Record Stock Movement{% endblock %}
+
+{% block content %}
+<h1>📝 Record Stock Movement</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">💾 Record Movement</button>
+    <a href="{% url 'stock_movement_list' %}" class="btn btn-primary">Cancel</a>
+</form>
+{% endblock %}

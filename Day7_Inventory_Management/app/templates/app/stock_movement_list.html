@@ -1,0 +1,45 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Stock Movements{% endblock %}
+
+{% block content %}
+<h1>📊 Stock Movements</h1>
+<a href="{% url 'stock_movement_create' %}" class="btn btn-success">+ Record Movement</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Product</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Reference</th>
+            <th>Notes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for movement in movements %}
+        <tr>
+            <td>{{ movement.date|date:"d M, Y H:i" }}</td>
+            <td>{{ movement.product.name }}</td>
+            <td>
+                <span class="badge {% if movement.movement_type == 'in' %}badge-success{% elif movement.movement_type == 'out' %}badge-danger{% else %}badge-info{% endif %}">
+                    {{ movement.get_movement_type_display }}
+                </span>
+            </td>
+            <td>{{ movement.quantity }}</td>
+            <td>{{ movement.reference_number|default:"-" }}</td>
+            <td>{{ movement.notes|truncatewords:10 }}</td>
+            <td>
+                <a href="{% url 'stock_movement_delete' movement.pk %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" style="text-align: center;">No stock movements recorded yet!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

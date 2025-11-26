@@ -1,0 +1,40 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Suppliers{% endblock %}
+
+{% block content %}
+<h1>🏢 Suppliers</h1>
+<a href="{% url 'supplier_create' %}" class="btn btn-success">+ Add Supplier</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Contact Person</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Products</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for supplier in suppliers %}
+        <tr>
+            <td>{{ supplier.name }}</td>
+            <td>{{ supplier.contact_person }}</td>
+            <td>{{ supplier.email }}</td>
+            <td>{{ supplier.phone }}</td>
+            <td>{{ supplier.products.count }}</td>
+            <td>
+                <a href="{% url 'supplier_update' supplier.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'supplier_delete' supplier.pk %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" style="text-align: center;">No suppliers found. Add one to get started!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
