@@ -1,0 +1,32 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Ingredients{% endblock %}
+
+{% block content %}
+<h1>🥕 Ingredients</h1>
+<a href="{% url 'ingredient_create' %}" class="btn btn-success">+ Add Ingredient</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ingredient in ingredients %}
+        <tr>
+            <td>{{ ingredient.name }}</td>
+            <td>
+                <a href="{% url 'ingredient_update' ingredient.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'ingredient_delete' ingredient.pk %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2" style="text-align: center;">No ingredients found. Add one to get started!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

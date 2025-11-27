@@ -1,0 +1,40 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Recipes - Recipe Management{% endblock %}
+
+{% block content %}
+<h1>🍽️ All Recipes</h1>
+<a href="{% url 'recipe_create' %}" class="btn btn-success">+ Add New Recipe</a>
+
+<div class="recipe-grid">
+    {% for recipe in recipes %}
+    <div class="recipe-card">
+        {% if recipe.image %}
+        <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}">
+        {% else %}
+        <img src="https://via.placeholder.com/300x200?text=No+Image" alt="{{ recipe.title }}">
+        {% endif %}
+        <div class="recipe-card-body">
+            <h3>{{ recipe.title }}</h3>
+            <p>{{ recipe.description|truncatewords:15 }}</p>
+            <div class="recipe-meta">
+                <span class="badge {% if recipe.difficulty == 'easy' %}badge-easy{% elif recipe.difficulty == 'medium' %}badge-medium{% else %}badge-hard{% endif %}">
+                    {{ recipe.get_difficulty_display }}
+                </span>
+                <span>⏱️ {{ recipe.total_time }} mins</span>
+                <span>🍽️ {{ recipe.servings }} servings</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <a href="{% url 'recipe_detail' recipe.pk %}" class="btn btn-info">View Recipe</a>
+                {% if user == recipe.author %}
+                <a href="{% url 'recipe_update' recipe.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'recipe_delete' recipe.pk %}" class="btn btn-danger">Delete</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No recipes found. Start by adding your first recipe!</p>
+    {% endfor %}
+</div>
+{% endblock %}

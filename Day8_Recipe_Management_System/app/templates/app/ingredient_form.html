@@ -1,0 +1,16 @@
+{% extends 'app/base.html' %}
+
+{% block title %}
+{% if form.instance.pk %}Edit{% else %}Add{% endif %} Ingredient
+{% endblock %}
+
+{% block content %}
+<h1>{% if form.instance.pk %}Edit{% else %}Add New{% endif %} Ingredient</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">💾 Save Ingredient</button>
+    <a href="{% url 'ingredient_list' %}" class="btn btn-primary">Cancel</a>
+</form>
+{% endblock %}

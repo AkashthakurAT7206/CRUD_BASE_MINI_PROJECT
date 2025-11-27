@@ -1,0 +1,32 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Delete Recipe{% endblock %}
+
+{% block content %}
+<h1>Delete Recipe</h1>
+
+<p style="font-size: 18px;">Are you sure you want to delete "<strong>{{ object.title }}</strong>"?</p>
+
+<table style="margin: 20px 0;">
+    <tr>
+        <th>Title:</th>
+        <td>{{ object.title }}</td>
+    </tr>
+    <tr>
+        <th>Category:</th>
+        <td>{{ object.category.name }}</td>
+    </tr>
+    <tr>
+        <th>Difficulty:</th>
+        <td>{{ object.get_difficulty_display }}</td>
+    </tr>
+</table>
+
+<p style="color: #dc3545;">⚠️ Warning: This action cannot be undone!</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="{% url 'recipe_list' %}" class="btn btn-primary">Cancel</a>
+</form>
+{% endblock %}

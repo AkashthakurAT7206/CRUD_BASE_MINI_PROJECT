@@ -1,0 +1,75 @@
+{% extends 'app/base.html' %}
+
+{% block title %}{{ recipe.title }} - Recipe Details{% endblock %}
+
+{% block content %}
+<h1>{{ recipe.title }}</h1>
+
+{% if recipe.image %}
+<img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" style="max-width: 600px; border-radius: 10px; margin: 20px 0;">
+{% endif %}
+
+<table>
+    <tr>
+        <th>Category:</th>
+        <td>{{ recipe.category.name }}</td>
+    </tr>
+    <tr>
+        <th>Author:</th>
+        <td>{{ recipe.author.username }}</td>
+    </tr>
+    <tr>
+        <th>Description:</th>
+        <td>{{ recipe.description }}</td>
+    </tr>
+    <tr>
+        <th>Difficulty:</th>
+        <td>
+            <span class="badge {% if recipe.difficulty == 'easy' %}badge-easy{% elif recipe.difficulty == 'medium' %}badge-medium{% else %}badge-hard{% endif %}">
+                {{ recipe.get_difficulty_display }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <th>Prep Time:</th>
+        <td>{{ recipe.prep_time }} minutes</td>
+    </tr>
+    <tr>
+        <th>Cook Time:</th>
+        <td>{{ recipe.cook_time }} minutes</td>
+    </tr>
+    <tr>
+        <th>Total Time:</th>
+        <td><strong>{{ recipe.total_time }} minutes</strong></td>
+    </tr>
+    <tr>
+        <th>Servings:</th>
+        <td>{{ recipe.servings }}</td>
+    </tr>
+</table>
+
+<h2 style="margin-top: 30px;">📝 Ingredients</h2>
+<ul style="line-height: 2; margin-left: 20px;">
+    {% for ri in recipe.recipe_ingredients.all %}
+    <li>{{ ri.quantity }} - {{ ri.ingredient.name }}</li>
+    {% empty %}
+    <li>No ingredients added yet.</li>
+    {% endfor %}
+</ul>
+
+<h2 style="margin-top: 30px;">📖 Instructions</h2>
+<div style="line-height: 1.8; white-space: pre-wrap;">{{ recipe.instructions }}</div>
+
+<div style="margin-top: 30px;">
+    {% if user == recipe.author %}
+    <a href="{% url 'recipe_update' recipe.pk %}" class="btn btn-warning">Edit Recipe</a>
+    <a href="{% url 'recipe_delete' recipe.pk %}" class="btn btn-danger">Delete Recipe</a>
+    {% endif %}
+    <a href="{% url 'recipe_list' %}" class="btn btn-primary">Back to Recipes</a>
+</div>
+
+<p style="margin-top: 20px; color: #666; font-size: 14px;">
+    Created: {{ recipe.created_at|date:"d M, Y" }} | 
+    Last Updated: {{ recipe.updated_at|date:"d M, Y" }}
+</p>
+{% endblock %}
