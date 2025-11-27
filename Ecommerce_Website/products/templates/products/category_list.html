@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Categories</title>
+</head>
+<body>
+<h2>Categories</h2>
+<ul>
+{% for category in categories %}
+    <li>
+        {{ category.name }}
+        {% if category.image %}
+            <img src="{{ category.image.url }}" width="100">
+        {% endif %}
+    </li>
+{% empty %}
+    <li>No categories available.</li>
+{% endfor %}
+</ul>
+<a href="{% url 'products:product_list' %}">Back to Products</a>
+</body>
+</html>

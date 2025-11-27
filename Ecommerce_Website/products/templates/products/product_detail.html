@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block carousel %}{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-5">
+      {% if product.image %}
+      <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+      {% endif %}
+    </div>
+
+    <div class="col-md-7">
+      <h2>Product Name: {{ product.name }}</h2>
+      <h3>BRAND: {{ product.brand }}</h3>
+      <p>{{ product.description }}</p>
+      <h4>₹{{ product.price }}</h4>
+
+      <!-- ✅ SIZE ON TOP -->
+      <form action="{% url 'cart:add_to_cart' product.id %}" method="post" class="m-0">
+        {% csrf_token %}
+
+        {% if product.get_size_options %}
+        <div class="mb-3">
+          <label class="form-label d-block">Select Size</label>
+          <div class="btn-group" role="group">
+            {% for size in product.get_size_options %}
+            <input type="radio" class="btn-check" name="size" id="size-{{ forloop.counter }}" value="{{ size }}" autocomplete="off">
+            <label class="btn btn-outline-success" for="size-{{ forloop.counter }}">{{ size }}</label>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
+        <input type="hidden" name="size" value="">
+        {% endif %}
+
+        <!-- ✅ BUTTONS IN ONE LINE -->
+        <div class="d-flex gap-3 align-items-center mt-3">
+          <a href="/reviews/add/{{ product.id }}/" class="btn btn-outline-primary">
+            Write a Review
+          </a>
+
+          <button type="submit" class="btn btn-primary">Add to Cart</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

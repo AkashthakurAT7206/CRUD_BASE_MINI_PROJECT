@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Review {{ product.name }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+    <a href="{% url 'reviews:product_reviews' product_id=product.id %}" class="btn btn-success">View Others Review</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .invoice-container {
+            width: 75%;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+            color: #333;
+            letter-spacing: 1px;
+        }
+
+        .details {
+            margin-top: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            font-size: 16px;
+        }
+
+        table th {
+            background: #4CAF50;
+            color: white;
+            padding: 12px;
+            letter-spacing: 0.5px;
+            font-size: 17px;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #eef5ff;
+        }
+
+        .total-section {
+            text-align: right;
+            margin-top: 25px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .print-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #000;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .print-btn:hover {
+            background: #444;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .invoice-container {
+                box-shadow: none;
+                border-radius: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="invoice-container">
+
+    <h2>Invoice</h2>
+
+    <div class="details">
+        <p><strong>Order ID:</strong> {{ order.id }}</p>
+        <p><strong>Date:</strong> {{ order.created_at|date:"M d, Y h:i A" }}</p>
+        <p><strong>Customer:</strong> {{ order.user.username }}</p>
+    </div>
+
+    <h3>Products</h3>
+
+    <table>
+        <tr>
+            <th>Product Name</th>
+            <th>Price (₹)</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+
+        {% for item in order_items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>₹{{ item.product.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ item.total_price }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p class="total-section">
+        Grand Total: ₹{{ total_amount }}
+    </p>
+
+    <button class="print-btn" onclick="window.print()">Print Invoice</button>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block carousel %}{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card text-center">
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor"
+                            class="bi bi-check-circle text-success" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                            <path
+                                d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05" />
+                        </svg>
+                    </div>
+
+                    <h2 class="text-success mb-3">Order Placed Successfully!</h2>
+                    <p class="lead">Thank you for your order!</p>
+
+                    <div class="alert alert-info my-4">
+                        <h4 class="alert-heading">Order Number: {{ order.order_number }}</h4>
+                        <p class="mb-0">Order Total: <strong>₹{{ order.total }}</strong></p>
+                    </div>
+
+                    <p>We've received your order and will start processing it soon.</p>
+                    <p class="text-muted">A confirmation email has been sent to {{ order.user.email }}</p>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6>Shipping To:</h6>
+                                    <p class="mb-0 small">
+                                        {{ order.shipping_address }}<br>
+                                        {{ order.shipping_city }}, {{ order.shipping_state }} - {{ order.shipping_zip_code }}<br>
+                                        {{ order.shipping_country }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6>Payment Method:</h6>
+                                    <p class="mb-0">{{ order.get_payment_method_display }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{% url 'order_detail' order.id %}" class="btn btn-primary me-2">View Order Details</a>
+                        <a href="{% url 'order_history' %}" class="btn btn-outline-primary">View All Orders</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

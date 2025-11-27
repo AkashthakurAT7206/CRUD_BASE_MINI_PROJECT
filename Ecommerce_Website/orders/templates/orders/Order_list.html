@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% block carousel %}{% endblock %}
+{% load static %}
+
+{% block content %}
+
+<style>
+/* ============================
+   ORDERS PAGE CSS
+============================ */
+
+body {
+    background-color: #f8f9fa;
+}
+
+.orders-container {
+    margin-top: 40px;
+}
+
+.orders-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+/* Table */
+.table-container {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.table thead {
+    background: #f1f1f1;
+}
+
+.table th {
+    padding: 14px;
+    font-weight: bold;
+    color: #444;
+}
+
+.table td {
+    padding: 14px;
+    vertical-align: middle;
+}
+
+/* Hover Effect */
+.table-hover tbody tr:hover {
+    background-color: #fafafa;
+    transition: 0.3s;
+}
+
+/* Badge Colors */
+.badge {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+}
+
+/* Buttons */
+.btn {
+    font-size: 0.80rem;
+    padding: 5px 10px;
+    border-radius: 6px !important;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0060d1;
+}
+
+.btn-outline-primary {
+    border: 1px solid #0d6efd;
+    color: #0d6efd;
+}
+
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+.actions-column a {
+    margin-right: 5px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .table thead {
+        display: none;
+    }
+
+    .table, .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        background: white;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .table td {
+        text-align: right;
+        padding: 12px;
+        position: relative;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        color: #555;
+    }
+}
+</style>
+
+<div class="container orders-container">
+    <h2 class="orders-title">Orders</h2>
+
+    <div class="table-container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Order Number</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Payment Method</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td data-label="Order Number">{{ order.order_number }}</td>
+
+                    <td data-label="Status">
+                        <span class="badge bg-{{ order.get_status_display_class }}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </td>
+
+                    <td data-label="Total">₹{{ order.total }}</td>
+
+                    <td data-label="Payment">{{ order.get_payment_method_display }}</td>
+
+                    <td data-label="Date">{{ order.created_at|date:"M d, Y" }}</td>
+
+                    <td data-label="Actions" class="actions-column">
+                        <a href="{% url 'orders:detail' order.id %}"
+                           class="btn btn-sm btn-primary">View</a>
+
+                        <a href="{% url 'orders:payment_history' %}"
+                           class="btn btn-sm btn-secondary">History</a>
+
+                        <a href="{% url 'orders:invoice' order.id %}"
+                           class="btn btn-sm btn-outline-primary">Invoice</a>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">
+                        No orders found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+

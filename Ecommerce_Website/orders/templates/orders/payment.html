@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment - {{ order.order_number }}{% endblock %}
+{% block carousel %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-credit-card"></i> Complete Payment
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- Order Summary -->
+                    <div class="mb-4">
+                        <h5>Order Summary</h5>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Order Number:</span>
+                            <strong>{{ order.order_number }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Payment Method:</span>
+                            <span>{{ order.get_payment_method_display }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>₹{{ order.subtotal }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tax:</span>
+                            <span>₹{{ order.tax }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Shipping:</span>
+                            <span>₹{{ order.shipping_cost }}</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <h5>Total Amount:</h5>
+                            <h5 class="text-primary">₹{{ amount_rupees }}</h5>
+                        </div>
+                    </div>
+
+                    <!-- Payment Button -->
+                    <div class="text-center">
+                        <button id="pay-btn" class="btn btn-primary btn-lg px-5">
+                            <i class="bi bi-lock-fill"></i> Pay ₹{{ amount_rupees }}
+                        </button>
+                        <br>
+                        <small class="text-muted mt-2 d-block">
+                            <i class="bi bi-shield-check"></i> Secure payment powered by Razorpay
+                        </small>
+                    </div>
+
+                    <!-- Cancel Payment -->
+                    <div class="text-center mt-4">
+                        <a href="{% url 'orders:detail' order.id %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancel & Go Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Info -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6><i class="bi bi-info-circle"></i> Payment Information</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li><i class="bi bi-check-circle text-success"></i> Your payment is secured with 256-bit SSL encryption</li>
+                        <li><i class="bi bi-check-circle text-success"></i> We accept Credit/Debit Cards, UPI, Net Banking, and Wallets</li>
+                        <li><i class="bi bi-check-circle text-success"></i> Payment will be processed immediately</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Razorpay Checkout Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById("pay-btn").onclick = function () {
+    var options = {
+        "key": "{{ key_id }}",
+        "amount": "{{ amount }}",
+        "currency": "INR",
+        "name": "Dressify",
+        "description": "Order Payment - {{ order.order_number }}",
+        "order_id": "{{ razorpay_order_id }}",
+        "handler": function (response) {
+            // Create a form and submit to payment success endpoint
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{% url 'orders:payment_success' %}";
+            
+            // Add CSRF token
+            var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (!csrfToken) {
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = '{{ csrf_token }}';
+                form.appendChild(csrfInput);
+            } else {
+                form.appendChild(csrfToken.cloneNode(true));
+            }
+            
+            // Add payment details
+            var paymentId = document.createElement('input');
+            paymentId.type = 'hidden';
+            paymentId.name = 'razorpay_payment_id';
+            paymentId.value = response.razorpay_payment_id;
+            form.appendChild(paymentId);
+            
+            var orderId = document.createElement('input');
+            orderId.type = 'hidden';
+            orderId.name = 'razorpay_order_id';
+            orderId.value = response.razorpay_order_id;
+            form.appendChild(orderId);
+            
+            var signature = document.createElement('input');
+            signature.type = 'hidden';
+            signature.name = 'razorpay_signature';
+            signature.value = response.razorpay_signature;
+            form.appendChild(signature);
+            
+            document.body.appendChild(form);
+            form.submit();
+        },
+        "prefill": {
+            "name": "{{ order.user.get_full_name|default:order.user.username }}",
+            "email": "{{ order.user.email }}",
+            "contact": "{{ order.shipping_phone }}"
+        },
+        "theme": {
+            "color": "#0d6efd"
+        },
+        "modal": {
+            "ondismiss": function() {
+                // Redirect to order detail on payment modal close
+                window.location.href = "{% url 'orders:detail' order.id %}";
+            }
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response) {
+        // Create a form and submit to payment failure endpoint
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'orders:payment_failure' %}";
+        
+        // Add CSRF token
+        var csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = '{{ csrf_token }}';
+        form.appendChild(csrfInput);
+        
+        // Add order ID
+        var orderId = document.createElement('input');
+        orderId.type = 'hidden';
+        orderId.name = 'razorpay_order_id';
+        orderId.value = response.error.metadata.order_id || "{{ razorpay_order_id }}";
+        form.appendChild(orderId);
+        
+        // Add error description
+        var errorDesc = document.createElement('input');
+        errorDesc.type = 'hidden';
+        errorDesc.name = 'error_description';
+        errorDesc.value = response.error.description || 'Payment failed';
+        form.appendChild(errorDesc);
+        
+        document.body.appendChild(form);
+        form.submit();
+    });
+    
+    rzp1.open();
+}
+</script>
+{% endblock %}

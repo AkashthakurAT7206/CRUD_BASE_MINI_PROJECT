@@ -1,0 +1,20 @@
+<!-- {% extends 'base.html' %} -->
+{% block content %}
+<div class="container mt-5">
+  <h2>Customer Reviews for {{ product.name }}</h2>
+  <a href="{% url 'products:product_detail' product.id %}" class="btn btn-secondary mb-3">Back to Product</a>
+
+  {% if reviews %}
+    {% for review in reviews %}
+      <div class="border p-3 rounded mb-3">
+        <strong>{{ review.user.username }}</strong>
+        <span class="text-warning">⭐ {{ review.rating }}/5</span><br>
+        <p>{{ review.comment }}</p>
+        <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">No reviews yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

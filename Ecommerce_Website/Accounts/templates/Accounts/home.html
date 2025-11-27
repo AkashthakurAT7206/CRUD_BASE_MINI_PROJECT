@@ -1,0 +1,631 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dressify - Flash Sale Live! Up to 70% OFF{% endblock %}
+
+{% block content %}
+<style>
+    /* Flash Sale Banner */
+    .flash-sale-banner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(90deg, #ff006e, #ff5e00);
+        color: white;
+        text-align: center;
+        padding: 14px 0;
+        font-weight: 800;
+        font-size: 1.15rem;
+        z-index: 9999;
+        box-shadow: 0 4px 20px rgba(255, 0, 110, 0.4);
+    }
+
+    .flash-sale-banner .timer {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 8px 16px;
+        border-radius: 50px;
+        margin: 0 15px;
+        font-weight: bold;
+    }
+
+    /* Push navbar below banner */
+    body>nav,
+    .navbar {
+        top: 58px !important;
+        position: fixed !important;
+        width: 100%;
+        z-index: 9998 !important;
+    }
+
+    /* Main content margin */
+    .main-content {
+        margin-top: 130px;
+    }
+
+    /* TESTIMONIALS — PERFECTLY CENTERED & ALIGNED */
+    .testimonials {
+        background-color: #cbd3e9;
+        padding: 70px 40px;
+        border-radius: 24px;
+        margin: 100px auto;
+        max-width: 1200px;
+        /* Same as other containers */
+        width: 100%;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .testimonials .text-center h2 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #333;
+        margin-bottom: 16px;
+    }
+
+    .testimonials .text-center p {
+        font-size: 1.1rem;
+        color: #555;
+    }
+
+    /* Testimonial Cards */
+    .testimonial-card {
+        background: #fff8e1;
+        border-radius: 18px;
+        padding: 32px 28px;
+        height: 100%;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s ease;
+        border: 1px solid #ffe0b3;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .testimonial-card p {
+        font-style: italic;
+        color: #e91e63;
+        font-size: 1.15rem;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .testimonial-card h6 {
+        font-weight: 700;
+        color: #0d6efd;
+        font-size: 1.1rem;
+        margin-top: 10px;
+    }
+
+    /* Footer */
+    .footer {
+        background: linear-gradient(135deg, #0f1626 0%, #1a2338 100%);
+        color: #ddd;
+        padding: 80px 0 30px;
+        margin-top: 120px;
+    }
+
+    .footer h4,
+    .footer h5 {
+        color: white;
+        font-weight: 800;
+        font-size: 1.4rem;
+        margin-bottom: 24px;
+        position: relative;
+        display: inline-block;
+    }
+
+    .footer h4::after,
+    .footer h5::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 50px;
+        height: 4px;
+        background: linear-gradient(90deg, #ff006e, #ff8c00);
+        border-radius: 2px;
+    }
+
+    .footer p {
+        color: #bbbbbb;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .footer a {
+        color: #cccccc;
+        text-decoration: none;
+        display: block;
+        margin: 12px 0;
+        transition: all 0.3s ease;
+    }
+
+    .footer a:hover {
+        color: #ff006e;
+        transform: translateX(8px);
+    }
+
+    /* Social Icons - Perfect Horizontal Layout */
+    .footer .social-icons {
+        display: flex !important;
+        align-items: center;
+        gap: 24px;
+        /* Clean modern spacing */
+        margin-top: 20px;
+    }
+
+    .footer .social-icons a {
+        font-size: 1.9rem;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .footer .social-icons a:hover {
+        color: #ff006e;
+        transform: translateY(-5px) scale(1.2);
+    }
+
+    .footer .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 14px 20px;
+        color: white;
+    }
+
+    .footer .form-control::placeholder {
+        color: #aaa;
+    }
+
+    .footer .btn-subscribe {
+        background: linear-gradient(45deg, #ff006e, #ff5e00);
+        border: none;
+        border-radius: 50px;
+        padding: 14px 32px;
+        font-weight: bold;
+        margin-left: -100px;
+        box-shadow: 0 5px 15px rgba(255, 0, 110, 0.4);
+    }
+
+    .stats-section-full {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-attachment: fixed;
+        /* Parallax effect */
+        position: relative;
+        overflow: hidden;
+        padding: 120px 0 !important;
+        margin: 120px 0 !important;
+        border-radius: 0 !important;
+    }
+
+    .stats-section-full::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://images.unsplash.com/photo-1558618666-58b3e75e2d4b?w=2000') center/cover no-repeat;
+        background-attachment: fixed;
+        opacity: 0.15;
+        z-index: 1;
+    }
+
+    .stats-section-full::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(102, 126, 234, 0.92);
+        z-index: 1;
+    }
+
+    .stats-section-full .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Big bold numbers with subtle glow */
+    .stats-section-full h3 {
+        font-size: 4.5rem !important;
+        font-weight: 900 !important;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+        letter-spacing: -2px;
+    }
+
+    .stats-section-full p {
+        font-size: 1.4rem !important;
+        font-weight: 500;
+    }
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+        .stats-section-full {
+            padding: 80px 0 !important;
+            background-attachment: scroll;
+        }
+
+        .stats-section-full::before,
+        .stats-section-full::after {
+            background-attachment: scroll;
+        }
+
+        .stats-section-full h3 {
+            font-size: 3rem !important;
+        }
+
+        .stats-section-full .lead {
+            font-size: 1.1rem !important;
+        }
+    }
+</style>
+
+<!-- Flash Sale Banner -->
+<div class="flash-sale-banner">
+    FLASH SALE LIVE! Up to 70% OFF Everything
+    <span class="timer" id="saleTimer">24h 00m 00s</span>
+    <a href="{% url 'products:product_list' %}" class="btn btn-light btn-sm rounded-pill px-5 fw-bold">Shop Now</a>
+</div>
+
+<div class="main-content">
+    <!-- 🎠 Carousel -->
+    
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"
+                aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'images/slide1.jpg' %}" class="d-block w-100" alt="Slide 1">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Welcome to Dressify</h5>
+                    <p>Discover the latest fashion trends and styles</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/slide2.jpg' %}" class="d-block w-100" alt="Slide 2">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Shop the Best Collection</h5>
+                    <p>Quality products at affordable prices</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/slide3.jpg' %}" class="d-block w-100" alt="Slide 3">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Stay Fashion Forward</h5>
+                    <p>Your one-stop destination for all fashion needs</p>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+   
+
+    <!-- Shop by Category -->
+    <div class="container my-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5">Shop by Category</h2>
+            <p class="text-muted">Browse our wide range of products</p>
+        </div>
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <a href="{% url 'products:category_products' category.slug %}"
+                        class="text-decoration-none text-dark">
+                        {% if category.image %}
+                        <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}"
+                            style="height: 200px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-secondary d-flex align-items-center justify-content-center"
+                            style="height: 200px;">
+                            <i class="bi bi-image text-white fs-1"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">{{ category.name }}</h5>
+                            <button class="btn btn-primary btn-sm mt-2">View Products</button>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No categories available yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Style Trends -->
+    <div class="container my-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5">Dressify 2025</h2>
+            <p class="text-muted">Stay ahead with the latest fashion inspirations</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <a href="{% url 'products:product_list' %}" class="text-decoration-none text-dark">
+                    <div class="card border-0 shadow-sm h-100 trend-card">
+                        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800"
+                            class="card-img-top" alt="Casual Chic" style="height: 250px; object-fit: cover;">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">Casual Chic</h5>
+                            <p class="text-muted">Minimal, comfy, and effortlessly stylish</p>
+                            <span class="btn btn-outline-primary btn-sm">Explore</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'products:product_list' %}" class="text-decoration-none text-dark">
+                    <div class="card border-0 shadow-sm h-100 trend-card">
+                        <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800"
+                            class="card-img-top" alt="Ethnic Elegance" style="height: 250px; object-fit: cover;">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">Ethnic Elegance</h5>
+                            <p class="text-muted">Traditional wear meets modern comfort</p>
+                            <span class="btn btn-outline-primary btn-sm">Explore</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'products:product_list' %}" class="text-decoration-none text-dark">
+                    <div class="card border-0 shadow-sm h-100 trend-card">
+                        <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800"
+                            class="card-img-top" alt="Street Vibe" style="height: 250px; object-fit: cover;">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">Street Vibe</h5>
+                            <p class="text-muted">Urban, bold, and expressive</p>
+                            <span class="btn btn-outline-primary btn-sm">Explore</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Benefits -->
+    <!-- Our Services + Quality Assurance -->
+    <div class="container my-5">
+        <h2 class="fw-bold display-5 text-center mb-5">Our Services & Quality Assurance</h2>
+
+        <div class="row g-4 text-center">
+            <!-- Trusted Product Quality -->
+            <div class="col-md-3">
+                <div class="qa-card p-4 h-100 d-flex flex-column align-items-center">
+                    <div class="icon-wrap mb-3">
+                        <i class="bi bi-award-fill"></i>
+                    </div>
+                    <h5 class="fw-bold">Trusted Product Quality</h5>
+                    <p class="text-muted mb-0">All products are vetted by our quality team — genuine materials and
+                        accurate descriptions.</p>
+                </div>
+            </div>
+
+            <!-- Secure Payment -->
+            <div class="col-md-3">
+                <div class="qa-card p-4 h-100 d-flex flex-column align-items-center">
+                    <div class="icon-wrap mb-3">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h5 class="fw-bold">Secure Payment</h5>
+                    <p class="text-muted mb-0">100% secure transactions</p>
+                </div>
+            </div>
+
+            <!-- Secure Packaging -->
+            <div class="col-md-3">
+                <div class="qa-card p-4 h-100 d-flex flex-column align-items-center">
+                    <div class="icon-wrap mb-3">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <h5 class="fw-bold">Secure Packaging</h5>
+                    <p class="text-muted mb-0">Orders are packed with protective materials and tamper-evident seals.</p>
+                </div>
+            </div>
+
+            <!-- Eco-Friendly Packaging -->
+            <div class="col-md-3">
+                <div class="qa-card p-4 h-100 d-flex flex-column align-items-center">
+                    <div class="icon-wrap mb-3">
+                        <i class="bi bi-recycle"></i>
+                    </div>
+                    <h5 class="fw-bold">Eco-Friendly Packaging</h5>
+                    <p class="text-muted mb-0">We use sustainable and recyclable packaging materials to reduce
+                        environmental impact.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Styles -->
+    <style>
+        .qa-card {
+            background: linear-gradient(180deg, #ffffff 0%, #fffaf2 100%);
+            border-radius: 14px;
+            border: 1px solid rgba(13, 110, 253, 0.06);
+            box-shadow: 0 8px 24px rgba(3, 15, 40, 0.04);
+            transition: transform .35s ease, box-shadow .35s ease;
+            padding: 30px 20px;
+        }
+
+        .qa-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(3, 15, 40, 0.08);
+        }
+
+        .qa-card .icon-wrap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, rgba(255, 0, 110, 0.08), rgba(255, 94, 0, 0.06));
+            color: #ff006e;
+            font-size: 1.6rem;
+        }
+
+        @media (max-width: 991px) {
+            .col-md-3 {
+                flex: 0 0 50%;
+                max-width: 50%;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .col-md-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+
+
+
+    <!-- NEW: TRUSTED STATS SECTION WITH HEADING -->
+    <!-- REPLACE ONLY THIS PART (the stats section) in your current code -->
+
+    <!-- FULL-WIDTH TRUSTED STATS SECTION (LIKE A PREMIUM CAROUSEL/HERO) -->
+    <section class="stats-section-full py-5">
+        <div class="container position-relative z-2">
+            <div class="text-center text-white mb-5">
+                <h2 class="fw-bold display-5">Trusted by Thousands Across India</h2>
+                <p class="lead fs-4 opacity-90">Join the fastest-growing fashion family in the country</p>
+            </div>
+
+            <div class="row g-4 g-md-5 justify-content-center text-center">
+                <div class="col-6 col-md-3">
+                    <h3 class="display-2 fw-bold mb-2">12K+</h3>
+                    <p class="fs-4 fw-medium opacity-95">Happy Customers</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h3 class="display-2 fw-bold mb-2">1.2M+</h3>
+                    <p class="fs-4 fw-medium opacity-95">Orders Delivered</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h3 class="display-2 fw-bold mb-2">4.8★</h3>
+                    <p class="fs-4 fw-medium opacity-95">Average Rating</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h3 class="display-2 fw-bold mb-2">150+</h3>
+                    <p class="fs-4 fw-medium opacity-95">Cities Served</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- TESTIMONIALS — NOW PERFECTLY CENTERED & BEAUTIFUL -->
+    <div class="container">
+        <div class="testimonials">
+            <div class="text-center mb-5">
+                <h2>What Our Customers Say's</h2>
+                <p class="text-muted">Hear from our happy shoppers</p>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p>“Loved the quality and design! The fabric is super comfortable.”</p>
+                        <h6>- Yash Wagh</h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p>“Fast delivery and great prices. Dressify is my go-to for fashion!”</p>
+                        <h6>- Rajesh Yadav</h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p>“Amazing variety! The site is easy to use and products are stylish.”</p>
+                        <h6>- Sakshi Mehta</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONLY REPLACE YOUR FOOTER SECTION WITH THIS ONE -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-5">
+                <!-- Brand -->
+                <div class="col-lg-3">
+                    <h4>Dressify</h4>
+                    <p>Your favorite fashion destination for trendy, affordable & premium clothing in India.</p>
+
+                    <!-- Social Icons - Now 100% HORIZONTAL -->
+                    <div class="social-icons d-flex mt-4">
+                        <a href="#" class="me-4"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="me-4"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="me-4"><i class="bi bi-youtube"></i></a>
+                        <a href="#" class="me-4"><i class="bi bi-twitter"></i></a>
+                    </div>
+                </div>
+
+                <!-- Shop -->
+                <div class="col-lg-2 offset-lg-1">
+                    <h5>Shop</h5>
+                    <a href="#">New Arrivals</a>
+                    <a href="#">Best Sellers</a>
+                    <a href="#">Sale</a>
+                    <a href="{% url 'products:product_list' %}">All Products</a>
+                </div>
+
+                <!-- Support -->
+                <div class="col-lg-2">
+                    <h5>Support</h5>
+                    <a href="{% url 'feedback' %}">Contact Us</a>
+                    <a href="#">Shipping Info</a>
+                    <a href="#">Returns</a>
+                    <a href="#">Size Guide</a>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="col-lg-4">
+                    <h5>Stay Connected</h5>
+                    <p>Join 200K+ fashion lovers for exclusive offers!</p>
+                    <form class="d-flex mt-3">
+                        <input type="email" class="form-control" placeholder="Enter your email">
+                        <button type="submit" class="btn btn-subscribe">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+
+<script>
+    // Countdown
+    let end = new Date().getTime() + 24 * 60 * 60 * 1000;
+    setInterval(() => {
+        let diff = end - new Date().getTime();
+        if (diff > 0) {
+            let h = Math.floor(diff / (1000 * 60 * 60));
+            let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            let s = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById("saleTimer").innerHTML = `${h}h ${m}m ${s}s`;
+        }
+    }, 1000);
+
+    // Show size popup
+    setTimeout(() => document.getElementById('sizePopup').classList.add('show'), 12000);
+</script>
+
+{% endblock %}

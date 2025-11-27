@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block carousel %}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h2>Checkout</h2>
+  {% if items %}
+  <ul class="list-group mb-3">
+    {% for item in items %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <div class="fw-bold">{{ item.product.name }}</div>
+        <small class="text-muted">
+          {% if item.size %}Size: {{ item.size }} · {% endif %}
+          Qty: {{ item.quantity }}
+        </small>
+      </div>
+      <div>₹{{ item.get_total }}</div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <p class="fw-bold">Total Amount: ₹{{ total }}</p>
+  <p class="text-muted">(Here you can later integrate payment or order confirmation)</p>
+</div>
+{% endblock %}

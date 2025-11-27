@@ -1,0 +1,32 @@
+<h1>{{ product.name }}</h1>
+<p>{{ product.description }}</p>
+<p>Price: ₹{{ product.price }}</p>
+
+<hr>
+
+<h2>Latest Reviews</h2>
+
+{% if reviews %}
+    {% for review in reviews %}
+        <p><strong>{{ review.user.username }}</strong> ({{ review.rating }}/5)</p>
+        <p>{{ review.comment }}</p>
+        <hr>
+    {% endfor %}
+
+    <a href="{% url 'reviews:product_reviews' product.id %}" class="btn btn-primary">
+        View All Reviews
+    </a>
+
+{% else %}
+    <p>No reviews yet.</p>
+{% endif %}
+
+<hr>
+
+<h3>Write a Review</h3>
+
+<form method="POST" action="{% url 'reviews:add_review' product.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Submit Review</button>
+</form>

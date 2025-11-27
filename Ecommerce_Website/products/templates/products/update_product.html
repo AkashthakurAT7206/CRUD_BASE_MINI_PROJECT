@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Update Product</title></head>
+<body>
+<h2>Update Product</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update</button>
+</form>
+<a href="{% url 'products:product_list' %}">Cancel</a>
+</body>
+</html>

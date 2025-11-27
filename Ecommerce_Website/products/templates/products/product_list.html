@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}{% if category %}{{ category.name }} Products{% else %}Product List{% endif %}{% endblock %}
+{% block carousel %}{% endblock %}
+{% block content %}
+<div class="container my-4">
+    {% if category %}
+    <h2>{{ category.name }} Products</h2>
+    <a href="{% url 'home' %}" class="btn btn-secondary mb-3">← Back to Home</a>
+    {% else %}
+    <h2>All Products</h2>
+    {% endif %}
+
+    <form method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search products..."
+                value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    <!-- {% if user.is_staff %}
+    <a href="{% url 'products:add_product' %}" class="btn btn-success mb-3">Add New Product</a>
+    {% endif %} -->
+    <hr>
+
+    <div class="row g-4">
+        {% for product in products %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                {% if product.image %}
+                <a href="{% url 'products:product_detail' product.id %}">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
+                    style="height: 250px; object-fit: cover;">
+                </a>   
+                {% else %}
+                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                    style="height: 250px;">
+                    <i class="bi bi-image text-white" style="font-size: 3rem;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">
+                        <a href="{% url 'products:product_detail' product.id %}" class="text-decoration-none">
+                            {{ product.name }}
+                        </a>
+                    </h5>
+                    <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
+                    <div class="mt-auto">
+                        <p class="mb-2">
+                            <strong class="text-primary">₹{{ product.discount_price|default:product.price }}</strong>
+                            {% if product.discount_price %}
+                            <small class="text-muted text-decoration-line-through">₹{{ product.price }}</small>
+                            <span class="badge bg-success">{{ product.get_discount_percentage }}% off</span>
+                            {% endif %}
+                        </p>
+                        <!-- Show product info here -->
+
+                        {% if product.get_size_options %}
+                        <a href="{% url 'products:product_detail' product.id %}" class="btn btn-outline-primary w-100">
+                            Choose Size
+                        </a>
+                        {% else %}
+                        <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                        </form>
+                        {% endif %}
+
+                        <div class="d-flex justify-content-center gap-3 my-3">
+
+                                <!-- View Reviews Button -->
+                                <a href="{% url 'reviews:product_reviews' product.id %}"
+                                    class="btn btn-outline-secondary px-4 py-2 rounded-3 shadow-sm">
+                                    ⭐ View Reviews
+                                </a>
+
+                                <!-- Wishlist Button -->
+                                <a href="{% url 'wishlist:add' product.id %}"
+                                    class="btn btn-outline-danger px-4 py-2 rounded-3 shadow-sm">
+                                    ❤️ Wishlist
+                                </a>
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center text-muted">No products found.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+            <li class="page-item active">
+                <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

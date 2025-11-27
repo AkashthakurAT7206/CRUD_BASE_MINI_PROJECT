@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container text-center mt-5">
+  <h2>🎉 Thank You!</h2>
+  <p>Your review for <strong>{{ product.name }}</strong> has been submitted successfully.</p>
+  <a href="{% url 'products:product_detail' pk=product.id %}" class="btn btn-success">Back to Product</a>
+</div>
+{% endblock %}

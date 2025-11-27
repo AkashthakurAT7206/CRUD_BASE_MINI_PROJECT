@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block carousel %}{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>My Wishlist ❤️</h2>
+    <hr>
+
+    {% if items %}
+    <div class="row">
+        {% for item in items %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.product.name }}</h5>
+                    <p>₹{{ item.product.price }}</p>
+
+                    <a href="{% url 'products:product_detail' item.product.id %}" class="btn btn-primary btn-sm">View</a>
+                    <a href="{% url 'wishlist:remove' item.product.id %}" class="btn btn-danger btn-sm">Remove</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <p>No items in wishlist.</p>
+    {% endif %}
+</div>
+{% endblock %}
